@@ -17,7 +17,7 @@ export function ChatButton({
             ? "bg-gray-300 text-white cursor-not-allowed"
             : isLoading
             ? "bg-gray-900 text-white"
-            : "bg-blue-500 text-white hover:bg-blue-600"
+            : "bg-gray-900 text-white hover:bg-gray-800"
         }
 				disabled:cursor-not-allowed`}
     >

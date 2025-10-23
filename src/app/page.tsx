@@ -1,71 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useChat } from "@/app/hooks/useChat";
+import { ChatMessage } from "@/app/components/chat/ChatMessage";
+import { ChatInput } from "@/app/components/chat/ChatInput";
 
 export default function Home() {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    
-    setIsLoading(true);
-    
-    // Add user message
-    const userMessage = { role: 'user', content: input };
-    setMessages([...messages, userMessage]);
-    setInput('');
-
-    // Call API
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      body: JSON.stringify({ messages: [...messages, userMessage] }),
-    });
-
-    const data = await response.json();
-    
-    setMessages([...messages, userMessage, { role: 'assistant', content: data.message }]);
-    setIsLoading(false);
-  };
+  const { messages, send, isLoading } = useChat();
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-8">Code Review Assistant</h1>
-      
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-4 space-y-4">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="text-3xl font-bold mb-8 px-8"> </div>
+      <div className="flex-1 w-full max-w-4xl mx-auto flex flex-col justify-end pb-0">
+        <div className="flex-1 overflow-y-auto w-full max-w-full sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto space-y-4 sm:space-y-6 px-2 sm:px-0 mb-4">
           {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`p-4 rounded-lg ${
-                message.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'
-              }`}
-            >
-              <div className="font-semibold mb-2">
-                {message.role === 'user' ? 'You' : 'AI Reviewer'}
-              </div>
-              <div>{message.content}</div>
-            </div>
+            <ChatMessage key={index} message={message} />
           ))}
         </div>
-
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Paste your code here for review..."
-            className="flex-1 p-4 border rounded-lg"
-            rows={4}
-          />
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300"
-          >
-            {isLoading ? 'Sending...' : 'Send'}
-          </button>
-        </form>
+        <div className="sticky bottom-0 bg-gray-50 z-10 pt-2 pb-4 px-2 sm:px-0">
+          <ChatInput onSend={send} isLoading={isLoading} />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import type { ChatMessage, ChatService } from "../app/types/chat";
-// import { handleHttpError } from "../utils/httpError"; // Uncomment if file exists
 
 export function createChatService(options?: {
   baseUrl?: string;
@@ -27,7 +26,6 @@ export function createChatService(options?: {
     }
 
     if (!res.ok) {
-      // await handleHttpError(res); // Uncomment if file exists
       throw new Error(`HTTP error: ${res.status}`);
     }
 
